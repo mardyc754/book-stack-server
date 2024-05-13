@@ -9,11 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bookstack</groupId>
-    <artifactId>book-stack</artifactId>
+    <artifactId>bookService-stack</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>book-stack</name>
-    <description>book-stack</description>
+    <name>bookService-stack</name>
+    <description>bookService-stack</description>
     <properties>
         <java.version>21</java.version>
     </properties>
@@ -145,6 +145,53 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.15.0</version>
+                <executions>
+                    <execution>
+                        <!-- optional: you don't really need execution ids, but it looks nice in your build log. -->
+                        <id>install node and pnpm</id>
+                        <goals>
+                            <goal>install-node-and-pnpm</goal>
+                        </goals>
+                        <!-- optional: default phase is "generate-resources" -->
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nodeVersion>v20.11.0</nodeVersion>
+                    <!-- optional: with node version greater than 4.0.0 will use npm provided by node distribution -->
+                    <pnpmVersion>8.15.6</pnpmVersion>
+                    <workingDirectory>../bookService-stack-client</workingDirectory>
+                    <!-- optional: where to download node and npm from. Defaults to https://nodejs.org/dist/ -->
+<!--                    <downloadRoot>http://myproxy.example.org/nodejs/</downloadRoot>-->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/target/classes/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>../bookService-stack-client/node/dist</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
