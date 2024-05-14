@@ -1,6 +1,6 @@
-INSERT INTO "Publisher" (name) VALUES ('Scribner'),('Secker & Warburg'),('Houghton Mifflin'),('Doubleday');
+INSERT INTO "publisher" (name) VALUES ('Scribner'),('Secker & Warburg'),('Houghton Mifflin'),('Doubleday');
 
-INSERT INTO "Book" (title, publicationDate, pageCount, ISBN, description, price, publisher) VALUES ('The Great Gatsby',
+INSERT INTO "book" (title, publication_date, page_count, ISBN, description, price, publisher_id) VALUES ('The Great Gatsby',
                                                                                                      '1925-04-10', 180,
                                                                                                      '9780743273565',
                                                                                                      'The Great Gatsby is a novel written by American authorService F. Scott Fitzgerald that follows a cast of characters living in the fictional towns of West Egg and East Egg on prosperous Long Island in the summer of 1922.',
@@ -41,8 +41,8 @@ INSERT INTO "Book" (title, publicationDate, pageCount, ISBN, description, price,
                                                                                                      'Angels & Demons is a 2000 bestselling mystery-thriller novel written by American authorService Dan Brown and published by Pocket Books and then by Corgi Books.',
                                                                                                      12.99, 4);
 
-INSERT INTO "Author" ("firstName", "lastName") VALUES ('F. Scott','Fitzgerald'),('Harper','Lee'),('George','Orwell'),('J. D.','Salinger'),('J. R. R.','Tolkien'),('Dan','Brown');
-INSERT INTO "Book_Author" ("bookId", "authorId") VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(5,6),(6,5),(6,6),(7,7),(8,7);
+INSERT INTO "author" ("first_name", "last_name") VALUES ('F. Scott','Fitzgerald'),('Harper','Lee'),('George','Orwell'),('J. D.','Salinger'),('J. R. R.','Tolkien'),('Dan','Brown');
+INSERT INTO "book_author" ("book_id", "author_id") VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,5),(7,6),(8,6);
 
-INSERT INTO "Category" (name) VALUES ('Fiction'),('Non-Fiction'),('Fantasy'),('Mystery'),('Thriller');
-INSERT INTO "Book_Category" ("bookId", "categoryId") VALUES (1,1),(2,1),(3,1),(4,1),(5,3),(6,3),(7,4),(7,5),(8,4),(8,5);
+INSERT INTO "category" (name) VALUES ('Fiction'),('Non-Fiction'),('Fantasy'),('Mystery'),('Thriller');
+INSERT INTO "book_category" ("book_id", "category_id") VALUES (1,1),(2,1),(3,1),(4,1),(5,3),(6,3),(7,4),(7,5),(8,4),(8,5);
