@@ -50,14 +50,10 @@ public class Book implements Serializable {
     @Column(name = "description", nullable = false, length = 1000, columnDefinition = "TEXT")
     private String description;
 
-    @Setter
-    @Getter
-    @Column(name = "publisher_id", insertable = false, nullable = false)
-    private long publisherId;
 
     @Setter
     @Getter
-    @ManyToOne(targetEntity = Publisher.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Publisher.class)
     @JoinColumn(name = "publisher_id", nullable = false, insertable = false, updatable = false)
     private Publisher publisher;
 
