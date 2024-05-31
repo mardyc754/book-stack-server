@@ -1,4 +1,4 @@
-package com.bookstack.bookstack.security;
+package com.bookstack.bookstack.services;
 
 import java.util.Date;
 import java.util.HashMap;

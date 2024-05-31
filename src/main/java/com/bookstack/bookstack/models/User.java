@@ -12,11 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "User",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
+@Table(name = "Users")
 public class User implements UserDetails {
     @Getter
     @Setter
@@ -38,7 +34,7 @@ public class User implements UserDetails {
 
     @Getter
     @Setter
-    @Column(name = "password", nullable = false, length = 32)
+    @Column(name = "password", nullable = false, length = 60)
     private String password;
 
 //    @Getter
