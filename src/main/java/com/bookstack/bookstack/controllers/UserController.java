@@ -5,6 +5,9 @@ import com.bookstack.bookstack.services.AuthenticationService;
 import com.bookstack.bookstack.services.JwtService;
 import com.bookstack.bookstack.services.UserService;
 import graphql.GraphQLContext;
+import org.springframework.graphql.server.WebGraphQlResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -12,6 +15,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -42,6 +46,18 @@ public class UserController {
 
         return authenticatedUser;
 
+    }
+
+    @MutationMapping
+    @PreAuthorize("isAuthenticated()")
+    public boolean logout(GraphQLContext context) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        authentication.setAuthenticated(false);
+        SecurityContextHolder.clearContext();
+        context.put("token", "");
+
+        return true;
     }
 
     @QueryMapping
