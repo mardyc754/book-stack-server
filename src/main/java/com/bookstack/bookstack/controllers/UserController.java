@@ -3,13 +3,14 @@ package com.bookstack.bookstack.controllers;
 import com.bookstack.bookstack.models.User;
 import com.bookstack.bookstack.services.AuthenticationService;
 import com.bookstack.bookstack.services.JwtService;
-import com.bookstack.bookstack.utils.LoginResponse;
+import com.bookstack.bookstack.services.UserService;
 import graphql.GraphQLContext;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -18,12 +19,14 @@ import java.util.List;
 public class UserController {
 
     private final JwtService jwtService;
+    private final UserService userService;
     private final AuthenticationService authenticationService;
 
 
-    public UserController(JwtService jwtService, AuthenticationService authenticationService) {
+    public UserController(JwtService jwtService, AuthenticationService authenticationService, UserService userService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.userService = userService;
     }
 
     @MutationMapping
@@ -39,5 +42,19 @@ public class UserController {
 
         return authenticatedUser;
 
+    }
+
+    @QueryMapping
+    @PreAuthorize("isAuthenticated()")
+    public User currentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return (User) authentication.getPrincipal();
+    }
+
+    @QueryMapping
+    @PreAuthorize("isAuthenticated()")
+    public List<User> allUsers() {
+        return userService.allUsers();
     }
 }

@@ -24,18 +24,14 @@ public class ResponseHeaderInterceptor implements WebGraphQlInterceptor {
     public Mono<WebGraphQlResponse> intercept(WebGraphQlRequest request, Chain chain) {
         return chain.next(request).doOnNext(response -> {
             String value = response.getExecutionInput().getGraphQLContext().get("token");
-//            ResponseCookie cookie = ResponseCookie.from("token", value).build();
-//            ServerHttpResponse serverHttpResponse = response.
 
-            System.out.println(">>>>>>>>>> " + value);
-
+            System.out.println(">>>>>>>>> ResponseHeaderInterceptor: " + value);
             // sometimes the value is null
             if (value != null) {
                 ResponseCookie cookie = ResponseCookie.from("token", value)
                         .httpOnly(true)
                         .secure(true)
                         .path("/")
-                        .domain("127.0.0.1")
                         .sameSite("None")
                         .maxAge(36000)
                         .build();

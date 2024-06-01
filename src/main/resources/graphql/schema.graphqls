@@ -1,6 +1,8 @@
 type Query {
     bookById(id: ID): Book
     allBooks: [Book]
+    currentUser: User
+    allUsers: [User]
 }
 
 type Mutation {
