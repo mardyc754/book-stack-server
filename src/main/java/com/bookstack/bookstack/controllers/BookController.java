@@ -21,6 +21,7 @@ public class BookController {
         this.bookRepository = bookRepository;
     }
 
+
     @QueryMapping
     public Book bookById(@Argument Long id) {
         return bookRepository.findById(id).orElse(null);

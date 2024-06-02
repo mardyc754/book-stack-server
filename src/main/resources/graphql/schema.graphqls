@@ -1,6 +1,14 @@
 type Query {
     bookById(id: ID): Book
     allBooks: [Book]
+    currentUser: User
+    allUsers: [User]
+}
+
+type Mutation {
+    login(username: String, password: String): User
+    register(username: String, email: String, password: String): User
+    logout: Boolean
 }
 
 type Book {
@@ -33,4 +41,12 @@ type Publisher {
     id: ID
     name: String
     books: [Book]
+}
+
+type User {
+    id: ID
+    username: String
+    email: String
+    password: String
+    role: String
 }
