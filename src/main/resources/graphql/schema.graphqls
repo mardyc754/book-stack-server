@@ -48,11 +48,5 @@ type User {
     username: String
     email: String
     password: String
-    roles: [Role]
-}
-
-type Role {
-    id: ID
-    name: String
-    users: [User]
+    role: String
 }

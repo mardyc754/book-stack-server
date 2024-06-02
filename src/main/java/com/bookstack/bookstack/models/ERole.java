@@ -1,6 +1,6 @@
 package com.bookstack.bookstack.models;
 
 public enum ERole {
-    CLIENT,
-    SELLER,
+    ROLE_USER,
+    ROLE_ADMIN,
 }

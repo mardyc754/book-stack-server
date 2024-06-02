@@ -1,19 +1,19 @@
 package com.bookstack.bookstack.models;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "Users")
 public class User implements UserDetails {
+    String ROLE_PREFIX = "ROLE_";
+
     @Getter
     @Setter
     @Id
@@ -37,11 +37,10 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false, length = 60)
     private String password;
 
-//    @Getter
-//    @Setter
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "role_id", nullable = false)
-//    private Role role;
+    @Getter
+    @Setter
+    @Column(name = "role", nullable = false, length = 20)
+    private String role;
 
     public User() {
     }
@@ -69,14 +68,20 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role));
+
+        return authorities;
     }
 
-    public User(String username, String email, String password) {
+
+    public User(String username, String email, String password, String role) {
         this.username = username;
         this.email = email;
         this.password = password;
-//        this.role = role;
+        this.role = role;
     }
 
     // getters and setters
