@@ -42,6 +42,17 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false, length = 20)
     private String role;
 
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "userId", targetEntity = BoughtBook.class)
+    private List<BoughtBook> boughtBooks;
+
+    @Getter
+    @Setter
+    @OneToOne(mappedBy = "user", targetEntity = Basket.class)
+
+    private Basket basket;
+
     public User() {
     }
 
@@ -81,6 +92,7 @@ public class User implements UserDetails {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.boughtBooks = new ArrayList<>();
         this.role = role;
     }
 

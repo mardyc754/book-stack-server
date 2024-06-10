@@ -2,6 +2,7 @@ package com.bookstack.bookstack.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -93,6 +94,12 @@ public class Book implements Serializable {
     )
     private List<Category> categories;
 
+    @Setter
+    @Getter
+    @Column(name = "quantity", nullable = false)
+    @Min(value = 0, message = "Quantity must be greater or equal 0")
+    private int quantity;
+
 
     public Book() {
     }
@@ -108,7 +115,8 @@ public class Book implements Serializable {
                 List<Category> categories,
                 String imageUrlS,
                 String imageUrlM,
-                String imageUrlL
+                String imageUrlL,
+                int quantity
     ) {
         this.title = title;
         this.price = price;
@@ -122,6 +130,7 @@ public class Book implements Serializable {
         this.imageUrlS = imageUrlS;
         this.imageUrlM = imageUrlM;
         this.imageUrlL = imageUrlL;
+        this.quantity = quantity;
     }
 
 }
