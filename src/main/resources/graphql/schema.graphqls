@@ -12,16 +12,19 @@ type Mutation {
 }
 
 type Book {
-    id: ID
-    title: String
-    price: Float
-    ISBN: String
+    id: ID!
+    title: String!
+    price: Float!
+    ISBN: String!
     description: String
-    publicationDate: String
-    pageCount: Int
+    publicationDate: String!
+    pageCount: Int!
     authors: [Author]
     categories: [Category]
     publisher: Publisher
+    imageUrlS: String!
+    imageUrlM: String!
+    imageUrlL: String!
 }
 
 type Author {

@@ -4,6 +4,9 @@ import com.bookstack.bookstack.models.Book;
 import com.bookstack.bookstack.repositories.AuthorRepository;
 import com.bookstack.bookstack.repositories.BookRepository;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
@@ -28,8 +31,9 @@ public class BookController {
     }
 
     @QueryMapping
-    public List<Book> allBooks() {
-        return bookRepository.findAll();
+    public Page<Book> allBooks() {
+        Pageable pageable = PageRequest.of(0, 20);
+        return bookRepository.findAll(pageable);
     }
 
 //    @SchemaMapping

@@ -42,12 +42,27 @@ public class Book implements Serializable {
 
     @Setter
     @Getter
+    @Column(name = "image_url_s", nullable = false)
+    private String imageUrlS;
+
+    @Setter
+    @Getter
+    @Column(name = "image_url_m", nullable = false)
+    private String imageUrlM;
+
+    @Setter
+    @Getter
+    @Column(name = "image_url_l", nullable = false)
+    private String imageUrlL;
+
+    @Setter
+    @Getter
     @Column(name = "isbn", unique = true, nullable = false)
     private String ISBN;
 
     @Setter
     @Getter
-    @Column(name = "description", nullable = false, length = 1000, columnDefinition = "TEXT")
+    @Column(name = "description", nullable = true, length = 1000, columnDefinition = "TEXT")
     private String description;
 
 
@@ -82,7 +97,19 @@ public class Book implements Serializable {
     public Book() {
     }
 
-    public Book(String title, double price, Date publicationDate, int pageCount, String ISBN, String description, Publisher publisher, List<Author> authors, List<Category> categories) {
+    public Book(String title,
+                double price,
+                Date publicationDate,
+                int pageCount,
+                String ISBN,
+                String description,
+                Publisher publisher,
+                List<Author> authors,
+                List<Category> categories,
+                String imageUrlS,
+                String imageUrlM,
+                String imageUrlL
+    ) {
         this.title = title;
         this.price = price;
         this.publicationDate = publicationDate;
@@ -92,6 +119,9 @@ public class Book implements Serializable {
         this.publisher = publisher;
         this.authors = authors;
         this.categories = categories;
+        this.imageUrlS = imageUrlS;
+        this.imageUrlM = imageUrlM;
+        this.imageUrlL = imageUrlL;
     }
 
 }
