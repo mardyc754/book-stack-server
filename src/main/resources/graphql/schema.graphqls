@@ -1,6 +1,6 @@
 type Query {
     bookById(id: ID): Book
-    allBooks: [Book]
+    allBooks(minQuantity: Int): [Book]
     currentUser: User
     allUsers: [User]
 }
@@ -8,7 +8,8 @@ type Query {
 type Mutation {
     login(username: String, password: String): User
     register(username: String, email: String, password: String): User
-    logout: Boolean
+    logout: Boolean,
+    addBookToCart(bookId: ID!, quantity: Int!): Book
 }
 
 type Book {
@@ -25,6 +26,7 @@ type Book {
     imageUrlS: String!
     imageUrlM: String!
     imageUrlL: String!
+    quantity: Int!
 }
 
 type Author {
