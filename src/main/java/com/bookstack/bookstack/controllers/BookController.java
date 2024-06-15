@@ -10,6 +10,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -105,6 +106,92 @@ public class BookController {
         }
 
         return basketRepository.save(userBasket);
+    }
+
+
+    @MutationMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public Basket changeBookQuantityInCart(@Argument Long bookId, @Argument Long userId, @Argument Integer quantity) {
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        Basket userBasket = user.getBasket();
+
+        if (userBasket == null) {
+            throw new IllegalArgumentException("Basket not found");
+        }
+
+        List<BookBasket> books = userBasket.getBooks();
+        boolean bookInBasket = false;
+        for (BookBasket book : books) {
+            if (book.getBook().getId().equals(bookId)) {
+                int oldQuantity = book.getQuantity();
+                book.setQuantity(quantity);
+                int bookQuantityInStock = book.getBook().getQuantity();
+                int newQuantity = book.getQuantity();
+                book.getBook().setQuantity(bookQuantityInStock + (newQuantity - oldQuantity));
+                bookInBasket = true;
+                break;
+            }
+
+            if (book.getQuantity() < 1) {
+                books.remove(book);
+            }
+        }
+        if (!bookInBasket) {
+            throw new IllegalArgumentException("Book not found in basket");
+        }
+
+        userBasket.setBooks(books);
+
+        return basketRepository.save(userBasket);
+    }
+
+    @MutationMapping
+    @Transactional
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public Basket removeBookFromCart(@Argument Long bookId, @Argument Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+
+        Basket userBasket = user.getBasket();
+
+        if (userBasket == null) {
+            throw new IllegalArgumentException("Basket not found");
+        }
+
+        List<BookBasket> books = userBasket.getBooks();
+        boolean bookInBasket = false;
+        for (BookBasket book : books) {
+            if (book.getBook().getId().equals(bookId)) {
+                int bookQuantityInStock = book.getBook().getQuantity();
+                int bookQuantityInBasket = book.getQuantity();
+                book.getBook().setQuantity(bookQuantityInStock + bookQuantityInBasket);
+                books.remove(book);
+                bookInBasket = true;
+                break;
+            }
+        }
+        if (!bookInBasket) {
+            throw new IllegalArgumentException("Book not found in basket");
+        }
+
+        userBasket.setBooks(books);
+
+        bookBasketRepository.deleteByBookIdAndBasketId(bookId, userBasket.getId());
+
+        return basketRepository.save(userBasket);
+    }
+
+    @QueryMapping
+    public Basket basketByUserId(@Argument Long userId) {
+        return basketRepository.findByUserId(userId).orElse(null);
     }
 
 //    @SchemaMapping

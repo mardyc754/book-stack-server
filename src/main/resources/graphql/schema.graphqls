@@ -3,6 +3,7 @@ type Query {
     allBooks(minQuantity: Int): [Book]
     currentUser: User
     allUsers: [User]
+    basketByUserId(userId: ID): Basket
 }
 
 type Mutation {
@@ -10,6 +11,8 @@ type Mutation {
     register(username: String, email: String, password: String): User
     logout: Boolean,
     addBookToCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
+    changeBookQuantityInCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
+    removeBookFromCart(bookId: ID!, userId: ID!): Basket
 }
 
 type Book {

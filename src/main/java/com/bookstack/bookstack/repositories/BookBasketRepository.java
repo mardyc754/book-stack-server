@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookBasketRepository extends JpaRepository<BookBasket, BookBasketRepository> {
+
+    void deleteByBookIdAndBasketId(Long bookId, Long basketId);
 }
