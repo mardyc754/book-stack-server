@@ -5,9 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Table(name = "Basket")
 public class Basket implements Serializable {
@@ -22,7 +24,7 @@ public class Basket implements Serializable {
         @Setter
         private User user;
 
-        @OneToMany(mappedBy = "basketId", cascade = CascadeType.ALL)
+        @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
         @Setter
         private List<BookBasket> books;
 
@@ -32,5 +34,11 @@ public class Basket implements Serializable {
         public Basket(User user, List<BookBasket> book) {
             this.user = user;
             this.books = book;
+        }
+
+        public Basket(User user, BookBasket book) {
+                this.user = user;
+                this.books = new ArrayList<>();
+                this.books.add(book);
         }
 }

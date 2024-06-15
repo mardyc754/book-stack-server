@@ -9,7 +9,7 @@ type Mutation {
     login(username: String, password: String): User
     register(username: String, email: String, password: String): User
     logout: Boolean,
-    addBookToCart(bookId: ID!, quantity: Int!): Book
+    addBookToCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
 }
 
 type Book {
@@ -54,4 +54,17 @@ type User {
     email: String
     password: String
     role: String
+}
+
+
+type Basket {
+    id: ID
+    user: User
+    books: [BookBasket]
+}
+
+type BookBasket {
+    id: ID!
+    book: Book!
+    quantity: Int!
 }

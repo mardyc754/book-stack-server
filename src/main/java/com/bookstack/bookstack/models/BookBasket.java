@@ -3,6 +3,7 @@ package com.bookstack.bookstack.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -11,19 +12,27 @@ import java.util.List;
 @Table(name = "book_basket")
 public class BookBasket {
 
-    @Id
+    @EmbeddedId
     @Getter
-    @ManyToOne(targetEntity = Book.class)
-    @JoinColumn(name = "book_id", nullable = false, insertable = false, updatable = false)
-    private Long bookId;
-
-    @Id
-    @Getter
-    @ManyToOne(targetEntity = Basket.class)
-    @JoinColumn(name = "basket_id", nullable = false, insertable = false, updatable = false)
-    private Long basketId;
+    @Setter
+    private BookBasketId id;
 
     @Getter
+    @Setter
+    @ManyToOne
+    @MapsId("bookId")
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    @Getter
+    @Setter
+    @ManyToOne
+    @MapsId("basketId")
+    @JoinColumn(name = "basket_id")
+    private Basket basket;
+
+    @Getter
+    @Setter
     @Column(name = "quantity", nullable = false)
     @Min(value = 1, message = "Quantity must be greater than 0")
     private int quantity;
@@ -31,9 +40,9 @@ public class BookBasket {
     public BookBasket() {
     }
 
-    public BookBasket(Long bookId, Long basketId, int quantity) {
-        this.bookId = bookId;
-        this.basketId = basketId;
+    public BookBasket(Book book, Basket basket, int quantity) {
+        this.book = book;
+        this.basket = basket;
         this.quantity = quantity;
     }
 
