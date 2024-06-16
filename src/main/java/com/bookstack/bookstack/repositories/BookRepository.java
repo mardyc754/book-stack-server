@@ -1,5 +1,6 @@
 package com.bookstack.bookstack.repositories;
 
+import com.bookstack.bookstack.models.BoughtBook;
 import com.bookstack.bookstack.specs.BookSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,5 +20,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> findAll(@NonNull Pageable pageable);
 
     Page<Book> findAllByQuantityGreaterThan(Integer integer, Pageable pageable);
+
 }
 

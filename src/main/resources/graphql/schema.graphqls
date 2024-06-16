@@ -4,6 +4,7 @@ type Query {
     currentUser: User
     allUsers: [User]
     basketByUserId(userId: ID): Basket
+    boughtBooksByUserId(userId: ID): [BoughtBook]
 }
 
 type Mutation {
@@ -13,6 +14,7 @@ type Mutation {
     addBookToCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
     changeBookQuantityInCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
     removeBookFromCart(bookId: ID!, userId: ID!): Basket
+    buyBooks(userId: ID!): Basket
 }
 
 type Book {
@@ -68,6 +70,13 @@ type Basket {
 
 type BookBasket {
     id: ID!
+    book: Book!
+    quantity: Int!
+}
+
+type BoughtBook {
+    id: ID!
+    user: User!
     book: Book!
     quantity: Int!
 }

@@ -44,7 +44,7 @@ public class User implements UserDetails {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "userId", targetEntity = BoughtBook.class)
+    @OneToMany(mappedBy = "user")
     private List<BoughtBook> boughtBooks;
 
     @Getter

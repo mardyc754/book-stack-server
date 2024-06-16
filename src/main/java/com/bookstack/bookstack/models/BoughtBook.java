@@ -3,24 +3,27 @@ package com.bookstack.bookstack.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "bought_book")
 public class BoughtBook {
 
-    @Id
-    @Getter
-    @ManyToOne(targetEntity = Book.class)
+    @EmbeddedId
+    private BoughtBookId id;
+
+    @ManyToOne
+    @MapsId("bookId")
     @JoinColumn(name = "book_id", nullable = false, insertable = false, updatable = false)
-    private Long bookId;
+    private Book book;
 
-    @Id
-    @Getter
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne
+    @MapsId("userId")
     @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
-    private Long userId;
+    private User user;
 
-    @Getter
     @Column(name = "quantity", nullable = false)
     @Min(value = 1, message = "Quantity must be greater than 0")
     private int quantity;
@@ -28,9 +31,11 @@ public class BoughtBook {
     public BoughtBook() {
     }
 
-    public BoughtBook(Long bookId, Long userId, int quantity) {
-        this.bookId = bookId;
-        this.userId = userId;
+    public BoughtBook(Book book, User user, int quantity) {
+        this.book = book;
+        this.user = user;
         this.quantity = quantity;
     }
+
+
 }

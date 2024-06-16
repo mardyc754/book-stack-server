@@ -24,7 +24,7 @@ public class Basket implements Serializable {
         @Setter
         private User user;
 
-        @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL)
+        @OneToMany(mappedBy = "basket")
         @Setter
         private List<BookBasket> books;
 
