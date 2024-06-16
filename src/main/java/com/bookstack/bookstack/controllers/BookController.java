@@ -1,16 +1,15 @@
 package com.bookstack.bookstack.controllers;
 
 import com.bookstack.bookstack.models.*;
-import com.bookstack.bookstack.repositories.*;
+
+import com.bookstack.bookstack.services.BookService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,58 +17,41 @@ import java.util.Optional;
 @Controller
 public class BookController {
 
-    private final BookRepository bookRepository;
-    private final BoughtBookRepository boughtBookRepository;
+    private final BookService bookService;
+//    private final BookRepository bookRepository;
+//    private final BoughtBookRepository boughtBookRepository;
 
-    public BookController(BookRepository bookRepository, BoughtBookRepository boughtBookRepository) {
-        this.bookRepository = bookRepository;
-        this.boughtBookRepository = boughtBookRepository;
+    public BookController(BookService bookService) {
+//        this.bookRepository = bookRepository;
+//        this.boughtBookRepository = boughtBookRepository;
+            this.bookService = bookService;
     }
 
 
     @QueryMapping
     public Book bookById(@Argument Long id) {
-        return bookRepository.findById(id).orElse(null);
+        return bookService.bookById(id);
     }
 
     @QueryMapping
     public Page<Book> allBooks(@Argument Optional<Integer> minQuantity) {
-        Pageable pageable = PageRequest.of(0, 20);
-
-        if (minQuantity.isPresent()) {
-            return bookRepository.findAllByQuantityGreaterThan(minQuantity.get(), pageable);
-            //            return bookRepository.findAll(pageable, spec);
-        }
-
-        return bookRepository.findAll(pageable);
+        return bookService.allBooks(minQuantity);
     }
 
     @QueryMapping
     public List<BoughtBook> boughtBooksByUserId(@Argument Long userId) {
-        return boughtBookRepository.findBoughtBooksByUserId(userId);
+        return bookService.boughtBooksByUserId(userId);
     }
 
     @MutationMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Book addBookToStock(@Argument Long bookId, @Argument Integer quantity) {
-        Book book = bookRepository.findById(bookId).orElse(null);
-        if (book == null) {
-            throw new IllegalArgumentException("Book not found");
-        }
-
-        book.setQuantity(book.getQuantity() + quantity);
-        return bookRepository.save(book);
+        return bookService.addBookToStock(bookId, quantity);
     }
 
     @MutationMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Book changeBookPrice(@Argument Long bookId, @Argument Double newPrice) {
-        Book book = bookRepository.findById(bookId).orElse(null);
-        if (book == null) {
-            throw new IllegalArgumentException("Book not found");
-        }
-
-        book.setPrice(newPrice);
-        return bookRepository.save(book);
+        return bookService.changeBookPrice(bookId, newPrice);
     }
 }
