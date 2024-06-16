@@ -48,4 +48,28 @@ public class BookController {
     public List<BoughtBook> boughtBooksByUserId(@Argument Long userId) {
         return boughtBookRepository.findBoughtBooksByUserId(userId);
     }
+
+    @MutationMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Book addBookToStock(@Argument Long bookId, @Argument Integer quantity) {
+        Book book = bookRepository.findById(bookId).orElse(null);
+        if (book == null) {
+            throw new IllegalArgumentException("Book not found");
+        }
+
+        book.setQuantity(book.getQuantity() + quantity);
+        return bookRepository.save(book);
+    }
+
+    @MutationMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Book changeBookPrice(@Argument Long bookId, @Argument Double newPrice) {
+        Book book = bookRepository.findById(bookId).orElse(null);
+        if (book == null) {
+            throw new IllegalArgumentException("Book not found");
+        }
+
+        book.setPrice(newPrice);
+        return bookRepository.save(book);
+    }
 }

@@ -1,7 +1,9 @@
 package com.bookstack.bookstack.config;
 
+import com.bookstack.bookstack.models.User;
 import com.bookstack.bookstack.repositories.UserRepository;
 import com.bookstack.bookstack.utils.ResponseHeaderInterceptor;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,5 +48,20 @@ public class ApplicationConfiguration {
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
+    }
+
+    @Bean
+    public ApplicationRunner initializer() {
+        return args -> {
+            if (userRepository.findByUsername("admin").isEmpty()) {
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                User admin = new User();
+                admin.setUsername("admin");
+                admin.setEmail("admin@testmail.com");
+                admin.setPassword(encoder.encode("admin123"));
+                admin.setRole("ADMIN");
+                userRepository.save(admin);
+            }
+        };
     }
 }
