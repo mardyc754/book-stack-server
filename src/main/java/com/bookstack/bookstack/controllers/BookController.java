@@ -18,8 +18,7 @@ import java.util.Optional;
 public class BookController {
 
     private final BookService bookService;
-//    private final BookRepository bookRepository;
-//    private final BoughtBookRepository boughtBookRepository;
+
 
     public BookController(BookService bookService) {
 //        this.bookRepository = bookRepository;
@@ -34,7 +33,7 @@ public class BookController {
     }
 
     @QueryMapping
-    public Page<Book> allBooks(@Argument Optional<Integer> minQuantity) {
+    public List<Book> allBooks(@Argument Optional<Integer> minQuantity) {
         return bookService.allBooks(minQuantity);
     }
 

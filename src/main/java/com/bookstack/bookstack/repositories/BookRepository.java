@@ -17,9 +17,9 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book, Long> {
 //    Page<Book> findAll(Pageable pageable);
     @NonNull
-    Page<Book> findAll(@NonNull Pageable pageable);
+    List<Book> findAll();
 
-    Page<Book> findAllByQuantityGreaterThan(Integer integer, Pageable pageable);
+    List<Book> findAllByQuantityGreaterThan(Integer integer);
 
 }
 

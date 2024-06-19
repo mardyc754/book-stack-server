@@ -31,15 +31,13 @@ public class BookService {
         return bookRepository.findById(id).orElse(null);
     }
 
-    public Page<Book> allBooks(@Argument Optional<Integer> minQuantity) {
-        Pageable pageable = PageRequest.of(0, 20);
+    public List<Book> allBooks(@Argument Optional<Integer> minQuantity) {
 
         if (minQuantity.isPresent()) {
-            return bookRepository.findAllByQuantityGreaterThan(minQuantity.get(), pageable);
-            //            return bookRepository.findAll(pageable, spec);
+            return bookRepository.findAllByQuantityGreaterThan(minQuantity.get());
         }
 
-        return bookRepository.findAll(pageable);
+        return bookRepository.findAll();
     }
 
     public List<BoughtBook> boughtBooksByUserId(@Argument Long userId) {
