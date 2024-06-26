@@ -44,13 +44,13 @@ public class User implements UserDetails {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "userId", targetEntity = BoughtBook.class)
+    @OneToMany(mappedBy = "user")
     private List<BoughtBook> boughtBooks;
 
     @Getter
     @Setter
     @OneToOne(mappedBy = "user", targetEntity = Basket.class)
-
+    // @JoinColumn(name = "basket_id", nullable = false)
     private Basket basket;
 
     public User() {

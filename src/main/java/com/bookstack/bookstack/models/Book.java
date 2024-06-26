@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class Book implements Serializable {
     @Id
     @Column(name = "id",  columnDefinition = "serial")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Getter
     private Long id;
 
     @Setter
@@ -99,6 +101,9 @@ public class Book implements Serializable {
     @Column(name = "quantity", nullable = false)
     @Min(value = 0, message = "Quantity must be greater or equal 0")
     private int quantity;
+
+    @OneToMany(mappedBy = "book")
+    private List<BookBasket> bookBasket = new ArrayList<>();
 
 
     public Book() {

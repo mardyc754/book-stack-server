@@ -1,14 +1,22 @@
 type Query {
     bookById(id: ID): Book
-    allBooks: [Book]
+    allBooks(minQuantity: Int): [Book]
     currentUser: User
     allUsers: [User]
+    basketByUserId(userId: ID): Basket
+    boughtBooksByUserId(userId: ID): [BoughtBook]
 }
 
 type Mutation {
     login(username: String, password: String): User
     register(username: String, email: String, password: String): User
-    logout: Boolean
+    logout: Boolean,
+    addBookToCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
+    changeBookQuantityInCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
+    removeBookFromCart(bookId: ID!, userId: ID!): Basket
+    buyBooks(userId: ID!): Basket
+    addBookToStock(bookId: ID!, quantity: Int!): Book
+    changeBookPrice(bookId: ID!, newPrice: Float!): Book
 }
 
 type Book {
@@ -25,6 +33,7 @@ type Book {
     imageUrlS: String!
     imageUrlM: String!
     imageUrlL: String!
+    quantity: Int!
 }
 
 type Author {
@@ -52,4 +61,24 @@ type User {
     email: String
     password: String
     role: String
+}
+
+
+type Basket {
+    id: ID
+    user: User
+    books: [BookBasket]
+}
+
+type BookBasket {
+    id: ID!
+    book: Book!
+    quantity: Int!
+}
+
+type BoughtBook {
+    id: ID!
+    user: User!
+    book: Book!
+    quantity: Int!
 }
