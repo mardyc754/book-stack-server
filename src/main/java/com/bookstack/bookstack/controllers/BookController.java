@@ -3,7 +3,6 @@ package com.bookstack.bookstack.controllers;
 import com.bookstack.bookstack.models.*;
 
 import com.bookstack.bookstack.services.BookService;
-import org.springframework.data.domain.Page;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -19,13 +18,9 @@ public class BookController {
 
     private final BookService bookService;
 
-
     public BookController(BookService bookService) {
-//        this.bookRepository = bookRepository;
-//        this.boughtBookRepository = boughtBookRepository;
-            this.bookService = bookService;
+        this.bookService = bookService;
     }
-
 
     @QueryMapping
     public Book bookById(@Argument Long id) {

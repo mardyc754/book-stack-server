@@ -17,6 +17,8 @@ type Mutation {
     buyBooks(userId: ID!): Basket
     addBookToStock(bookId: ID!, quantity: Int!): Book
     changeBookPrice(bookId: ID!, newPrice: Float!): Book
+    changeUserPassword(userId: ID!, newPassword: String!): User
+    changeUserRole(userId: ID!, newRole: String!): User
 }
 
 type Book {

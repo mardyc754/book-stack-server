@@ -4,13 +4,6 @@ import com.bookstack.bookstack.models.Book;
 import com.bookstack.bookstack.models.BoughtBook;
 import com.bookstack.bookstack.repositories.BookRepository;
 import com.bookstack.bookstack.repositories.BoughtBookRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +20,11 @@ public class BookService {
     }
 
 
-    public Book bookById(@Argument Long id) {
+    public Book bookById(Long id) {
         return bookRepository.findById(id).orElse(null);
     }
 
-    public List<Book> allBooks(@Argument Optional<Integer> minQuantity) {
+    public List<Book> allBooks(Optional<Integer> minQuantity) {
 
         if (minQuantity.isPresent()) {
             return bookRepository.findAllByQuantityGreaterThan(minQuantity.get());
@@ -40,11 +33,11 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<BoughtBook> boughtBooksByUserId(@Argument Long userId) {
+    public List<BoughtBook> boughtBooksByUserId(Long userId) {
         return boughtBookRepository.findBoughtBooksByUserId(userId);
     }
 
-    public Book addBookToStock(@Argument Long bookId, @Argument Integer quantity) {
+    public Book addBookToStock(Long bookId, Integer quantity) {
         Book book = bookRepository.findById(bookId).orElse(null);
         if (book == null) {
             throw new IllegalArgumentException("Book not found");
@@ -54,7 +47,7 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    public Book changeBookPrice(@Argument Long bookId, @Argument Double newPrice) {
+    public Book changeBookPrice(Long bookId, Double newPrice) {
         Book book = bookRepository.findById(bookId).orElse(null);
         if (book == null) {
             throw new IllegalArgumentException("Book not found");
