@@ -9,7 +9,10 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,5 +50,33 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Book changeBookPrice(@Argument Long bookId, @Argument Double newPrice) {
         return bookService.changeBookPrice(bookId, newPrice);
+    }
+
+    @MutationMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Book addBook(
+            @Argument String title,
+            @Argument Double price,
+            @Argument String publicationDate,
+            @Argument Integer pageCount,
+            @Argument String ISBN,
+            @Argument String description,
+            @Argument Integer quantity,
+            @Argument Long publisherId,
+            @Argument List<Long> authorIds,
+            @Argument List<Long> categoryIds) {
+
+//        return bookService.addBook(title, author, price, quantity);
+        return bookService.addBook(
+                title,
+                price,
+                LocalDate.parse(publicationDate),
+                pageCount,
+                ISBN,
+                description,
+                quantity,
+                publisherId,
+                authorIds,
+                categoryIds);
     }
 }

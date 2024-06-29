@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "Book")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Book implements Serializable {
 
     @Id
@@ -36,7 +36,7 @@ public class Book implements Serializable {
     @Setter
     @Getter
     @Column(name = "publication_date", nullable = false)
-    private Date publicationDate;
+    private LocalDate publicationDate;
 
     @Setter
     @Getter
@@ -45,18 +45,12 @@ public class Book implements Serializable {
 
     @Setter
     @Getter
-    @Column(name = "image_url_s", nullable = false)
-    private String imageUrlS;
-
-    @Setter
-    @Getter
-    @Column(name = "image_url_m", nullable = false)
-    private String imageUrlM;
-
-    @Setter
-    @Getter
-    @Column(name = "image_url_l", nullable = false)
-    private String imageUrlL;
+    @OneToOne(
+            mappedBy = "book",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private UploadedImage image;
 
     @Setter
     @Getter
@@ -65,14 +59,14 @@ public class Book implements Serializable {
 
     @Setter
     @Getter
-    @Column(name = "description", nullable = true, length = 1000, columnDefinition = "TEXT")
+    @Column(name = "description", length = 1000, columnDefinition = "TEXT")
     private String description;
 
 
     @Setter
     @Getter
     @ManyToOne(targetEntity = Publisher.class)
-    @JoinColumn(name = "publisher_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
 
 
@@ -111,18 +105,14 @@ public class Book implements Serializable {
 
     public Book(String title,
                 double price,
-                Date publicationDate,
+                LocalDate publicationDate,
                 int pageCount,
                 String ISBN,
                 String description,
                 Publisher publisher,
                 List<Author> authors,
                 List<Category> categories,
-                String imageUrlS,
-                String imageUrlM,
-                String imageUrlL,
-                int quantity
-    ) {
+                int quantity) {
         this.title = title;
         this.price = price;
         this.publicationDate = publicationDate;
@@ -132,9 +122,6 @@ public class Book implements Serializable {
         this.publisher = publisher;
         this.authors = authors;
         this.categories = categories;
-        this.imageUrlS = imageUrlS;
-        this.imageUrlM = imageUrlM;
-        this.imageUrlL = imageUrlL;
         this.quantity = quantity;
     }
 

@@ -50,7 +50,6 @@ public class User implements UserDetails {
     @Getter
     @Setter
     @OneToOne(mappedBy = "user", targetEntity = Basket.class)
-    // @JoinColumn(name = "basket_id", nullable = false)
     private Basket basket;
 
     public User() {

@@ -47,13 +47,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        return http
+        return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/graphql", "/graphiql")
+                        .requestMatchers("/graphql", "/graphiql", "/images/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()).sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(Customizer.withDefaults())
@@ -77,31 +76,4 @@ public class SecurityConfig {
         return source;
     }
 
-
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:5173")
-//                .allowedMethods("GET", "POST", "PUT", "DELETE")
-////                .allowedHeaders("Origin,Content-Type,Accept,Authorization")
-//                .allowedHeaders("*")
-//                .allowCredentials(true)
-//                .maxAge(3600);
-//    }
-
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsManager() {
-//        UserDetails user = User.withDefaultPasswordEncoder() // (1)
-//                .username("user")
-//                .password("password")
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails admin = User.withDefaultPasswordEncoder() // (2)
-//                .username("admin")
-//                .password("password")
-//                .roles("USER", "ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin); // (3)
-//    }
 }

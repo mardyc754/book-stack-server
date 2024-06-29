@@ -5,6 +5,10 @@ type Query {
     allUsers: [User]
     basketByUserId(userId: ID): Basket
     boughtBooksByUserId(userId: ID): [BoughtBook]
+    allAuthors: [Author]
+    allCategories: [Category]
+    allPublishers: [Publisher]
+#    getAuthorsPublishersCategories: [AuthorPublisherCategory]
 }
 
 type Mutation {
@@ -19,6 +23,20 @@ type Mutation {
     changeBookPrice(bookId: ID!, newPrice: Float!): Book
     changeUserPassword(userId: ID!, newPassword: String!): User
     changeUserRole(userId: ID!, newRole: String!): User
+    addAuthor(firstName: String!, lastName: String!): Author
+    addCategory(name: String!): Category
+    addPublisher(name: String!): Publisher
+    addBook(
+        title: String!,
+        price: Float!,
+        publicationDate: String!,
+        pageCount: Int!,
+        ISBN: String!,
+        description: String,
+        quantity: Int!,
+        publisherId: ID,
+        authorIds: [ID],
+        categoryIds: [ID]): Book
 }
 
 type Book {
@@ -32,9 +50,7 @@ type Book {
     authors: [Author]
     categories: [Category]
     publisher: Publisher
-    imageUrlS: String!
-    imageUrlM: String!
-    imageUrlL: String!
+    image: UploadedImage
     quantity: Int!
 }
 
@@ -83,4 +99,11 @@ type BoughtBook {
     user: User!
     book: Book!
     quantity: Int!
+}
+
+
+type UploadedImage {
+    filename: String
+    type: String
+    content: String
 }

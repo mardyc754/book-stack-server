@@ -24,4 +24,6 @@ public class Publisher {
     @OneToMany(mappedBy = "publisher", targetEntity = Book.class)
     private List<Book> books;
 
+
+
 }
