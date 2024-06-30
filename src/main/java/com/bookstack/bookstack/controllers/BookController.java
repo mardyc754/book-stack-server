@@ -2,7 +2,6 @@ package com.bookstack.bookstack.controllers;
 
 import com.bookstack.bookstack.dtos.BookDto;
 import com.bookstack.bookstack.dtos.BoughtBookDto;
-import com.bookstack.bookstack.models.*;
 
 import com.bookstack.bookstack.services.BookService;
 
@@ -11,10 +10,8 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +30,8 @@ public class BookController {
     }
 
     @QueryMapping
-    public List<BookDto> allBooks(@Argument Optional<Integer> minQuantity) {
-        return bookService.allBooks(minQuantity);
+    public List<BookDto> allBooks(@Argument Integer minQuantity, @Argument List<Long> authorIds, @Argument List<Long> categoryIds, @Argument String publicationDateFrom, @Argument String publicationDateTo) {
+        return bookService.allBooks(minQuantity, authorIds, categoryIds, publicationDateFrom, publicationDateTo);
     }
 
     @QueryMapping
@@ -69,7 +66,6 @@ public class BookController {
             @Argument List<Long> authorIds,
             @Argument List<Long> categoryIds) {
 
-//        return bookService.addBook(title, author, price, quantity);
         return bookService.addBook(
                 title,
                 price,

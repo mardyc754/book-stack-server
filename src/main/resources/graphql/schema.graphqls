@@ -8,7 +8,7 @@ type Query {
     Get all books
     - minQuantity: Int - Minimum quantity of the book in the store
     """
-    allBooks(minQuantity: Int): [Book]
+    allBooks(minQuantity: Int, authorIds: [ID], categoryIds: [ID], publicationDateFrom: String, publicationDateTo: String): [Book]
     """
     Get current logged in user
     """

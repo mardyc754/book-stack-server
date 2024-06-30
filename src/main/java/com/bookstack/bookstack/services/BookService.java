@@ -4,22 +4,11 @@ import com.bookstack.bookstack.dtos.BookDto;
 import com.bookstack.bookstack.dtos.BoughtBookDto;
 import com.bookstack.bookstack.models.*;
 import com.bookstack.bookstack.repositories.*;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
 @Service
 public class BookService {
@@ -31,26 +20,20 @@ public class BookService {
 
     private final CategoryRepository categoryRepository;
 
-    private final UploadedImageRepository uploadedImageRepository;
-
     public BookService(BookRepository bookRepository,
                        BoughtBookRepository boughtBookRepository,
                        AuthorRepository authorRepository,
                        PublisherRepository publisherRepository,
-                       CategoryRepository categoryRepository,
-                       UploadedImageRepository uploadedImageRepository
+                       CategoryRepository categoryRepository
     ) {
         this.bookRepository = bookRepository;
         this.boughtBookRepository = boughtBookRepository;
         this.authorRepository = authorRepository;
         this.publisherRepository = publisherRepository;
         this.categoryRepository = categoryRepository;
-        this.uploadedImageRepository = uploadedImageRepository;
     }
 
-
     public BookDto bookById(Long id) {
-//        return bookRepository.findById(id).orElse(null);
         Book book = bookRepository.findById(id).orElse(null);
 
         if (book == null) {
@@ -60,12 +43,10 @@ public class BookService {
         return new BookDto(book);
     }
 
-    public List<BookDto> allBooks(Optional<Integer> minQuantity) {
-
-        return minQuantity
-                .map(integer -> BookDto.fromBooks(bookRepository.findAllByQuantityGreaterThan(integer)))
-                .orElseGet(() -> BookDto.fromBooks(bookRepository.findAll()));
-
+    public List<BookDto> allBooks(Integer minQuantity, List<Long> authorIds, List<Long> categoryIds, String publicationDateFrom, String publicationDateTo) {
+        LocalDate pubDateFrom = (publicationDateFrom != null) ? LocalDate.parse(publicationDateFrom) : null;
+        LocalDate pubDateTo = (publicationDateTo != null) ? LocalDate.parse(publicationDateTo) : null;
+        return BookDto.fromBooks(bookRepository.findAll(minQuantity, authorIds, categoryIds, pubDateFrom, pubDateTo));
     }
 
     public List<BoughtBookDto> boughtBooksByUserId(Long userId) {
@@ -103,19 +84,7 @@ public class BookService {
             Long publisherId,
             List<Long> authorIds,
             List<Long> categoryIds
-//    ) throws IOException {
     ) {
-        System.out.println("title: " + title);
-        System.out.println("price: " + price);
-        System.out.println("publicationDate: " + publicationDate);
-        System.out.println("pageCount: " + pageCount);
-        System.out.println("ISBN: " + ISBN);
-        System.out.println("description: " + description);
-        System.out.println("quantity: " + quantity);
-        System.out.println("publisherId: " + publisherId);
-        System.out.println("authorIds: " + authorIds);
-        System.out.println("categoryIds: " + categoryIds);
-
         List <Author> authors = authorRepository.findAllById(authorIds);
 
         if (authors.stream().findFirst().isEmpty()) {
@@ -134,22 +103,7 @@ public class BookService {
             throw new IllegalArgumentException("Publisher not found");
         }
 
-        UploadedImage uploadedImage = null;
-
-//        if (image != null) {
-//                String originalFileName = image.getOriginalFilename();
-//                String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-//            try {
-//                uploadedImage = new UploadedImage(fileName, image.getContentType(), image.getBytes());
-//    //            Path path = Paths.get("src/main/resources/static/images/" + fileName);
-//    //            Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//                uploadedImageRepository.save(uploadedImage);
-//            }
-//            catch (IOException e) {
-//                throw new IllegalArgumentException("Image upload failed");
-//            }
-//        }
-        Book book = new Book(
+        return new BookDto(bookRepository.save(new Book(
                 title,
                 price,
                 publicationDate,
@@ -160,12 +114,6 @@ public class BookService {
                 authors,
                 categories,
                 quantity
-        );
-
-//        if (uploadedImage != null) {
-//            book.setImage(uploadedImage);
-//        }
-
-        return new BookDto(bookRepository.save(book));
+        )));
     }
 }
