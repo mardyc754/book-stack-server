@@ -1,5 +1,6 @@
 package com.bookstack.bookstack.models;
 
+import com.bookstack.bookstack.dtos.UploadImageDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -47,8 +49,7 @@ public class Book implements Serializable {
     @Getter
     @OneToOne(
             mappedBy = "book",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            cascade = CascadeType.ALL
     )
     private UploadedImage image;
 

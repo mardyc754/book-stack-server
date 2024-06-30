@@ -1,5 +1,7 @@
 package com.bookstack.bookstack.services;
 
+import com.bookstack.bookstack.dtos.BookDto;
+import com.bookstack.bookstack.dtos.BoughtBookDto;
 import com.bookstack.bookstack.models.*;
 import com.bookstack.bookstack.repositories.*;
 import org.springframework.lang.Nullable;
@@ -9,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -46,44 +49,50 @@ public class BookService {
     }
 
 
-    public Book bookById(Long id) {
-        return bookRepository.findById(id).orElse(null);
-    }
+    public BookDto bookById(Long id) {
+//        return bookRepository.findById(id).orElse(null);
+        Book book = bookRepository.findById(id).orElse(null);
 
-    public List<Book> allBooks(Optional<Integer> minQuantity) {
-
-        if (minQuantity.isPresent()) {
-            return bookRepository.findAllByQuantityGreaterThan(minQuantity.get());
+        if (book == null) {
+            return null;
         }
 
-        return bookRepository.findAll();
+        return new BookDto(book);
     }
 
-    public List<BoughtBook> boughtBooksByUserId(Long userId) {
-        return boughtBookRepository.findBoughtBooksByUserId(userId);
+    public List<BookDto> allBooks(Optional<Integer> minQuantity) {
+
+        return minQuantity
+                .map(integer -> BookDto.fromBooks(bookRepository.findAllByQuantityGreaterThan(integer)))
+                .orElseGet(() -> BookDto.fromBooks(bookRepository.findAll()));
+
     }
 
-    public Book addBookToStock(Long bookId, Integer quantity) {
+    public List<BoughtBookDto> boughtBooksByUserId(Long userId) {
+        return BoughtBookDto.fromBoughtBooks(boughtBookRepository.findBoughtBooksByUserId(userId));
+    }
+
+    public BookDto addBookToStock(Long bookId, Integer quantity) {
         Book book = bookRepository.findById(bookId).orElse(null);
         if (book == null) {
             throw new IllegalArgumentException("Book not found");
         }
 
         book.setQuantity(book.getQuantity() + quantity);
-        return bookRepository.save(book);
+        return new BookDto(bookRepository.save(book));
     }
 
-    public Book changeBookPrice(Long bookId, Double newPrice) {
+    public BookDto changeBookPrice(Long bookId, Double newPrice) {
         Book book = bookRepository.findById(bookId).orElse(null);
         if (book == null) {
             throw new IllegalArgumentException("Book not found");
         }
 
         book.setPrice(newPrice);
-        return bookRepository.save(book);
+        return new BookDto(bookRepository.save(book));
     }
 
-    public Book addBook(
+    public BookDto addBook(
             String title,
             Double price,
             LocalDate publicationDate,
@@ -157,6 +166,6 @@ public class BookService {
 //            book.setImage(uploadedImage);
 //        }
 
-        return bookRepository.save(book);
+        return new BookDto(bookRepository.save(book));
     }
 }

@@ -8,7 +8,6 @@ type Query {
     allAuthors: [Author]
     allCategories: [Category]
     allPublishers: [Publisher]
-#    getAuthorsPublishersCategories: [AuthorPublisherCategory]
 }
 
 type Mutation {

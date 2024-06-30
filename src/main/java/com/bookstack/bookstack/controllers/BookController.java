@@ -1,5 +1,7 @@
 package com.bookstack.bookstack.controllers;
 
+import com.bookstack.bookstack.dtos.BookDto;
+import com.bookstack.bookstack.dtos.BoughtBookDto;
 import com.bookstack.bookstack.models.*;
 
 import com.bookstack.bookstack.services.BookService;
@@ -26,35 +28,36 @@ public class BookController {
     }
 
     @QueryMapping
-    public Book bookById(@Argument Long id) {
+    public BookDto bookById(@Argument Long id) {
         return bookService.bookById(id);
     }
 
     @QueryMapping
-    public List<Book> allBooks(@Argument Optional<Integer> minQuantity) {
+    public List<BookDto> allBooks(@Argument Optional<Integer> minQuantity) {
         return bookService.allBooks(minQuantity);
     }
 
     @QueryMapping
-    public List<BoughtBook> boughtBooksByUserId(@Argument Long userId) {
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    public List<BoughtBookDto> boughtBooksByUserId(@Argument Long userId) {
         return bookService.boughtBooksByUserId(userId);
     }
 
     @MutationMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Book addBookToStock(@Argument Long bookId, @Argument Integer quantity) {
+    public BookDto addBookToStock(@Argument Long bookId, @Argument Integer quantity) {
         return bookService.addBookToStock(bookId, quantity);
     }
 
     @MutationMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Book changeBookPrice(@Argument Long bookId, @Argument Double newPrice) {
+    public BookDto changeBookPrice(@Argument Long bookId, @Argument Double newPrice) {
         return bookService.changeBookPrice(bookId, newPrice);
     }
 
     @MutationMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Book addBook(
+    public BookDto addBook(
             @Argument String title,
             @Argument Double price,
             @Argument String publicationDate,

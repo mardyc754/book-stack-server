@@ -1,5 +1,6 @@
 package com.bookstack.bookstack.services;
 
+import com.bookstack.bookstack.dtos.BasketDto;
 import com.bookstack.bookstack.models.*;
 import com.bookstack.bookstack.repositories.*;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -28,7 +29,7 @@ public class BasketService {
         this.boughtBookRepository = boughtBookRepository;
     }
 
-    public Basket addBookToCart(@Argument Long bookId, @Argument Long userId, @Argument Integer quantity) {
+    public BasketDto addBookToCart(@Argument Long bookId, @Argument Long userId, @Argument Integer quantity) {
         // Remove the book from the stock
         User user = userRepository.findById(userId).orElse(null);
 
@@ -60,7 +61,8 @@ public class BasketService {
             bookBasketRepository.save(bookBasket);
 
             createdBasket.setBooks(List.of(bookBasket));
-            return basketRepository.save(createdBasket);
+            return new BasketDto(basketRepository.save(createdBasket));
+
         } else {
             List<BookBasket> books = userBasket.getBooks();
             boolean bookAlreadyInBasket = false;
@@ -82,12 +84,12 @@ public class BasketService {
             userBasket.setBooks(books);
         }
 
-        return basketRepository.save(userBasket);
+        return new BasketDto(basketRepository.save(userBasket));
     }
 
 
 
-    public Basket changeBookQuantityInCart(@Argument Long bookId, @Argument Long userId, @Argument Integer quantity) {
+    public BasketDto changeBookQuantityInCart(@Argument Long bookId, @Argument Long userId, @Argument Integer quantity) {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
@@ -123,10 +125,10 @@ public class BasketService {
 
         userBasket.setBooks(books);
 
-        return basketRepository.save(userBasket);
+        return new BasketDto(basketRepository.save(userBasket));
     }
 
-    public Basket removeBookFromCart(@Argument Long bookId, @Argument Long userId) {
+    public BasketDto removeBookFromCart(@Argument Long bookId, @Argument Long userId) {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
@@ -159,17 +161,17 @@ public class BasketService {
 
         bookBasketRepository.deleteByBookIdAndBasketId(bookId, userBasket.getId());
 
-        return basketRepository.save(userBasket);
+        return new BasketDto(basketRepository.save(userBasket));
     }
 
 
-    public Basket basketByUserId(@Argument Long userId) {
-
-        return basketRepository.findByUserId(userId).orElse(null);
+    public BasketDto basketByUserId(@Argument Long userId) {
+        Basket userBasket = basketRepository.findByUserId(userId).orElse(null);
+        return userBasket != null ? new BasketDto(userBasket) : null;
     }
 
 
-    public Basket buyBooks(@Argument Long userId) {
+    public BasketDto buyBooks(@Argument Long userId) {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
@@ -206,6 +208,6 @@ public class BasketService {
             bookBasketRepository.deleteByBookIdAndBasketId(book.getId(), basket.getId());
         }
 
-        return basketRepository.save(basket);
+        return new BasketDto(basketRepository.save(basket));
     }
 }

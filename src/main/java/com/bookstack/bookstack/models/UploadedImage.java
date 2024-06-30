@@ -28,6 +28,8 @@ public class UploadedImage {
 
     @OneToOne
     @MapsId
+    @Getter
+    @Setter
     @JoinColumn(name = "id")
     private Book book;
 
