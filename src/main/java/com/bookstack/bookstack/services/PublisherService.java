@@ -4,6 +4,7 @@ package com.bookstack.bookstack.services;
 import com.bookstack.bookstack.models.Publisher;
 import com.bookstack.bookstack.repositories.PublisherRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class PublisherService {
 
     public Publisher addPublisher(String name) {
         Publisher publisher = new Publisher();
-        publisher.setName(name);
+        publisher.setName(StringUtils.capitalize(name));
         return publisherRepository.save(publisher);
     }
 }

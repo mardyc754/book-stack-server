@@ -4,6 +4,7 @@ import com.bookstack.bookstack.models.Category;
 import com.bookstack.bookstack.repositories.CategoryRepository;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class CategoryService {
 
     public Category addCategory(String name) {
         Category category = new Category();
-        category.setName(name);
+        category.setName(StringUtils.capitalize(name));
         return categoryRepository.save(category);
     }
 }

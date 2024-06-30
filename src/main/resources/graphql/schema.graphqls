@@ -1,30 +1,142 @@
 type Query {
+    """
+    Get book by ID
+    - id: ID - ID of the book
+    """
     bookById(id: ID): Book
+    """
+    Get all books
+    - minQuantity: Int - Minimum quantity of the book in the store
+    """
     allBooks(minQuantity: Int): [Book]
+    """
+    Get current logged in user
+    """
     currentUser: User
+    """
+    Get all users
+    """
     allUsers: [User]
+    """
+    Get basket of the user by user ID
+    - userId: ID - ID of the user
+    """
     basketByUserId(userId: ID): Basket
+    """
+    Get all bought books by the user by user ID
+    - userId: ID - ID of the user
+    """
     boughtBooksByUserId(userId: ID): [BoughtBook]
+    """
+    Get all authors
+    """
     allAuthors: [Author]
+    """
+    Get all categories
+    """
     allCategories: [Category]
+    """
+    Get all publishers
+    """
     allPublishers: [Publisher]
 }
 
 type Mutation {
+    """
+    Login user
+    - username: String - Username of the user
+    - password: String - Password of the user
+    """
     login(username: String, password: String): User
+    """
+    Create user account
+    - username: String - Username of the user
+    - email: String - Email of the user
+    - password: String - Password of the user
+    """
     register(username: String, email: String, password: String): User
+    """
+    Logout user
+    """
     logout: Boolean,
+    """
+    Add book to the basket
+    - bookId: ID - ID of the book
+    - userId: ID - ID of the user
+    - quantity: Int - Quantity of the book to be added to the basket
+    """
     addBookToCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
+    """
+    Change quantity of the book in the basket
+    - bookId: ID - ID of the book
+    - userId: ID - ID of the user
+    - quantity: Int - New quantity of the book in the basket
+    """
     changeBookQuantityInCart(bookId: ID!, userId: ID!, quantity: Int!): Basket
+    """
+    Remove book from the basket
+    - bookId: ID - ID of the book
+    - userId: ID - ID of the user
+    """
     removeBookFromCart(bookId: ID!, userId: ID!): Basket
+    """
+    Buy books in the basket, remove them from the basket and add them to the bought books
+    - userId: ID - ID of the user
+    """
     buyBooks(userId: ID!): Basket
+    """
+    Add book to the store
+    - bookId: ID - ID of the book
+    - quantity: Int - Quantity of the book to be added to the store
+    """
     addBookToStock(bookId: ID!, quantity: Int!): Book
+    """
+    Change price of the book
+    - bookId: ID - ID of the book
+    - newPrice: Float - New price of the book
+    """
     changeBookPrice(bookId: ID!, newPrice: Float!): Book
+    """
+    Change user password
+    - bookId: ID - ID of the book
+    - newPassword: String - New password of the user
+    """
     changeUserPassword(userId: ID!, newPassword: String!): User
+    """
+    Change user role
+    - bookId: ID - ID of the book
+    - newRole: String - New role of the user
+    """
     changeUserRole(userId: ID!, newRole: String!): User
+    """
+    Add author
+    - firstName: String - First name of the author
+    - lastName: String - Last name of the author
+    """
     addAuthor(firstName: String!, lastName: String!): Author
+    """
+    Add category
+    - name: String - Name of the category
+    """
     addCategory(name: String!): Category
+    """
+    Add publisher
+    - name: String - Name of the publisher
+    """
     addPublisher(name: String!): Publisher
+    """
+    Add book to be possible to be sold
+    - title: String - Title of the book
+    - price: Float - Price of the book
+    - publicationDate: String - Publication date of the book
+    - pageCount: Int - Number of pages in the book
+    - ISBN: String - ISBN of the book
+    - description: String - Short description of the book
+    - quantity: Int - Quantity of the book in the store
+    - publisherId: ID - ID of the publisher
+    - authorIds: [ID] - IDs of the authors
+    - categoryIds: [ID] - IDs of the categories
+    """
     addBook(
         title: String!,
         price: Float!,
@@ -38,71 +150,216 @@ type Mutation {
         categoryIds: [ID]): Book
 }
 
+"""
+Book in the store
+"""
 type Book {
+    """
+    ID of the book
+    """
     id: ID!
+    """
+    Title of the book
+    """
     title: String!
+    """
+    Price of the book (in USD)
+    """
     price: Float!
+    """
+    ISBN of the book
+    """
     ISBN: String!
+    """
+    Short description of the book
+    """
     description: String
+    """
+    Publication date of the book
+    """
     publicationDate: String!
+    """
+    Number of pages in the book
+    """
     pageCount: Int!
+    """
+    Authors of the book
+    """
     authors: [Author]
+    """
+    Categories the book belongs to
+    """
     categories: [Category]
+    """
+    Publisher of the book
+    """
     publisher: Publisher
+    """
+    Cover image of the book
+    """
     image: UploadedImage
+    """
+    Quantity of the book in the store
+    """
     quantity: Int!
 }
 
+"""
+Author of the book
+"""
 type Author {
+    """
+    ID of the author
+    """
     id: ID
+    """
+    First name of the author
+    """
     firstName: String
+    """
+    Last name of the author
+    """
     lastName: String
+    """
+    Books written by the author
+    """
     books: [Book]
 }
 
+"""
+Category the book belongs to
+"""
 type Category {
+    """
+    ID of the category
+    """
     id: ID
+    """
+    Name of the category
+    """
     name: String
+    """
+    Books in the category
+    """
     books: [Book]
 }
 
+"""
+Publisher of the book
+"""
 type Publisher {
+    """
+    ID of the publisher
+    """
     id: ID
+    """
+    Name of the publisher
+    """
     name: String
+    """
+    Books published by the publisher
+    """
     books: [Book]
 }
 
+"""
+User of the application - it can be a customer or an admin
+"""
 type User {
+    """
+    ID of the user
+    """
     id: ID
+    """
+    The unique username of the user
+    """
     username: String
+    """
+    The email of the user
+    """
     email: String
+    """
+    The user's password
+    """
     password: String
+    """
+    The role of the user - it can be 'USER' or 'ADMIN'
+    """
     role: String
 }
 
-
+"""
+Basket of the user - it contains the books the user wants to buy
+"""
 type Basket {
+    """
+    ID of the basket
+    """
     id: ID
+    """
+    User who owns the basket
+    """
     user: User
+    """
+    Books in the basket
+    """
     books: [BookBasket]
 }
 
+"""
+Book in the basket
+"""
 type BookBasket {
+    """
+    ID of the book in the basket
+    """
     id: ID!
+    """
+    Book in the basket
+    """
     book: Book!
+    """
+    Quantity of the book in the basket
+    """
     quantity: Int!
 }
 
+"""
+Book bought by the user
+"""
 type BoughtBook {
+    """
+    ID of the bought book
+    """
     id: ID!
+    """
+    User who bought the book
+    """
     user: User!
+    """
+    Book bought by the user
+    """
     book: Book!
+    """
+    Quantity of the book bought by the user
+    """
     quantity: Int!
 }
 
-
+"""
+Cover image of the book
+"""
 type UploadedImage {
+    """
+    Name of the image file
+    """
     filename: String
+    """
+    Type of the image file
+    """
     type: String
+    """
+    Content of the image file saved as a base64 string
+    """
     content: String
 }
