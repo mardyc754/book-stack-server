@@ -43,9 +43,6 @@ public class UploadedImageController {
         photo.setType(file.getContentType());
         photo.setContent(file.getBytes());
 
-        System.out.println(photo.getFilename());
-        System.out.println("bookId: " + bookId);
-
         Book book = bookRepository.findById(bookId).orElse(null);
         if (book == null) {
             throw new IllegalArgumentException("Book for given cover image not found");
@@ -61,21 +58,5 @@ public class UploadedImageController {
         uploadImageDto.setContent(file.getBytes());
         
         return uploadImageDto;
-    }
-
-    @GetMapping("/{id}")
-    @ResponseBody
-    public UploadImageDto getImageById(@PathVariable String id) throws IOException {
-        UploadedImage photo = uploadedImageRepository.findById(Long.parseLong(id)).orElse(null);
-        if (photo == null) {
-            throw new IllegalArgumentException("Image not found");
-        }
-
-        return new UploadImageDto(photo.getBook().getId(), photo.getFilename(), photo.getType(), photo.getContent());
-    }
-
-    @GetMapping("/")
-    public List<UploadedImage> allPhotos() {
-        return uploadedImageRepository.findAll();
     }
 }

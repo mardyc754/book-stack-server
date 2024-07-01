@@ -7,6 +7,8 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -49,9 +51,9 @@ public class BasketService {
         Basket userBasket = user.getBasket();
 
         if (userBasket == null) {
-            userBasket = new Basket();
-            userBasket.setUser(user);
-            Basket createdBasket = basketRepository.save(userBasket);
+            Basket newBasket = new Basket();
+            newBasket.setUser(user);
+            Basket createdBasket = basketRepository.save(newBasket);
 
             BookBasketId id = new BookBasketId();
             id.setBookId(bookId);
@@ -59,10 +61,8 @@ public class BasketService {
             BookBasket bookBasket = new BookBasket(bookAddedToBasket, createdBasket, quantity);
             bookBasket.setId(id);
             bookBasketRepository.save(bookBasket);
-
-            createdBasket.setBooks(List.of(bookBasket));
+            createdBasket.setBooks(new ArrayList<>(List.of(bookBasketRepository.save(bookBasket))));
             return new BasketDto(basketRepository.save(createdBasket));
-
         } else {
             List<BookBasket> books = userBasket.getBooks();
             boolean bookAlreadyInBasket = false;
@@ -110,7 +110,7 @@ public class BasketService {
                 book.setQuantity(quantity);
                 int bookQuantityInStock = book.getBook().getQuantity();
                 int newQuantity = book.getQuantity();
-                book.getBook().setQuantity(bookQuantityInStock + (newQuantity - oldQuantity));
+                book.getBook().setQuantity(bookQuantityInStock + (oldQuantity - newQuantity));
                 bookInBasket = true;
                 break;
             }

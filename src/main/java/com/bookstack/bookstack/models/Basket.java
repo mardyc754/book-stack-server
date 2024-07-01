@@ -21,11 +21,9 @@ public class Basket implements Serializable {
 
         @OneToOne
         @JoinColumn(name = "user_id", nullable = false)
-        @Setter
         private User user;
 
         @OneToMany(mappedBy = "basket")
-        @Setter
         private List<BookBasket> books;
 
         public Basket() {
@@ -42,3 +40,4 @@ public class Basket implements Serializable {
                 this.books.add(book);
         }
 }
+
