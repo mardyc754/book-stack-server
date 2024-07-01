@@ -31,8 +31,8 @@ public class LoggerAspect {
     public void logAfterThrowing(JoinPoint joinPoint, Exception ex) throws Throwable {
         logger.error("**********");
         logger.error("An exception has been thrown in: {}", joinPoint.getSignature().getName());
-        logger.error("{}", ex.toString());
-        logger.error("Cause: {}", ex.getCause().toString());
+        logger.error("{}", ex);
+        logger.error("Cause: {}", ex.getCause());
         logger.error("**********");
     }
 
