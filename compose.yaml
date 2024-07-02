@@ -1,0 +1,23 @@
+version: '3'
+services:
+  book-stack-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://abul.db.elephantsql.com/rxcloyfh
+      SPRING_DATASOURCE_USERNAME: rxcloyfh
+      SPRING_DATASOURCE_PASSWORD: 8TJpqmO-0XAT1j800CtGu_pTa7_LIgIF
+
+  book-stack-client:
+    build:
+      context: ../book-stack-client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
