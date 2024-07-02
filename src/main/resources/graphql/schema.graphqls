@@ -7,6 +7,10 @@ type Query {
     """
     Get all books
     - minQuantity: Int - Minimum quantity of the book in the store
+    - authorIds: [ID] - IDs of the authors the books are written by
+    - categoryIds: [ID] - IDs of the categories the books should belong to
+    - publicationDateFrom: String - Publication date of the book from which the books should be returned
+    - publicationDateTo: String - Publication date of the book to which the books should be returned
     """
     allBooks(minQuantity: Int, authorIds: [ID], categoryIds: [ID], publicationDateFrom: String, publicationDateTo: String): [Book]
     """
